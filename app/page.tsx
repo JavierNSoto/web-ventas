@@ -1,4 +1,5 @@
 import Navbar from "@/components/Navbar";
+import MobileDock from "@/components/MobileDock";
 import Hero from "@/components/Hero";
 import LogosMarquee from "@/components/LogosMarquee";
 import Services from "@/components/Services";
@@ -11,24 +12,22 @@ import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 
 const BRAND = "TuMarca";
-const WHATSAPP = "569XXXXXXXX"; // Ej: 56912345678
+const WHATSAPP = "569XXXXXXXX"; // EJ: 56912345678
 const EMAIL = "contacto@tudominio.cl";
-const CALENDLY_URL = "https://calendly.com/tuusuario/llamada"; // opcional, si no tienes, deja ""
+const CALENDLY_URL = ""; // opcional
 
-const WA_TEXT_MAIN = encodeURIComponent(
-    "Hola, quiero cotizar una página web. ¿Me compartes paquetes y tiempos?"
-);
-const WA_TEXT_MAINT = encodeURIComponent(
-    "Hola, me interesa un plan de mantención web. ¿Qué incluye y cuánto cuesta?"
-);
+const WA_TEXT_MAIN = encodeURIComponent("Hola, quiero cotizar una página web. ¿Me compartes paquetes y tiempos?");
+const WA_TEXT_MAINT = encodeURIComponent("Hola, me interesa un plan de mantención web. ¿Qué incluye y cuánto cuesta?");
 
 export default function Home() {
     const waMain = `https://wa.me/${WHATSAPP}?text=${WA_TEXT_MAIN}`;
     const waMaint = `https://wa.me/${WHATSAPP}?text=${WA_TEXT_MAINT}`;
 
     return (
-        <main className="min-h-screen">
+        <main className="min-h-screen safe-bottom">
             <Navbar brand={BRAND} waLink={waMain} />
+            <MobileDock waLink={waMain} />
+
             <Hero brand={BRAND} waLink={waMain} calendly={CALENDLY_URL || undefined} />
             <LogosMarquee />
 
@@ -40,52 +39,23 @@ export default function Home() {
             <FAQ />
             <CTA waLink={waMain} />
 
-            {/* CONTACTO (Server, sin JS) */}
+            {/* Contacto (mantén el tuyo o el que ya tenías) */}
             <section id="contacto" className="container-max pb-16">
                 <div className="glow-border">
-                    <div className="glass shadow-soft rounded-2xl p-8 md:p-10">
+                    <div className="glass shadow-soft card p-8 md:p-10">
                         <h2 className="text-3xl font-extrabold tracking-tight">Cotiza en 1 minuto</h2>
                         <p className="mt-3 text-slate-600 max-w-2xl">
                             Cuéntame qué vendes, qué necesitas (landing/corporativa/tienda) y cuándo quieres lanzarla.
                         </p>
 
                         <form className="mt-6 grid gap-4 md:grid-cols-2" action="/gracias" method="GET">
-                            <input
-                                className="rounded-xl border border-slate-300 bg-white/70 px-4 py-3"
-                                placeholder="Nombre"
-                                name="name"
-                                required
-                            />
-                            <input
-                                className="rounded-xl border border-slate-300 bg-white/70 px-4 py-3"
-                                placeholder="Email"
-                                name="email"
-                                type="email"
-                                required
-                            />
-                            <input
-                                className="rounded-xl border border-slate-300 bg-white/70 px-4 py-3 md:col-span-2"
-                                placeholder="¿Qué necesitas? (Landing / Corporativa / Tienda) + rubro"
-                                name="need"
-                                required
-                            />
-                            <textarea
-                                className="rounded-xl border border-slate-300 bg-white/70 px-4 py-3 md:col-span-2 min-h-[120px]"
-                                placeholder="Cuéntame tu objetivo (vender más, captar leads, mostrar servicios, etc.)"
-                                name="message"
-                                required
-                            />
+                            <input className="rounded-2xl border border-slate-300 bg-white/80 px-4 py-3" placeholder="Nombre" name="name" required />
+                            <input className="rounded-2xl border border-slate-300 bg-white/80 px-4 py-3" placeholder="Email" name="email" type="email" required />
+                            <input className="rounded-2xl border border-slate-300 bg-white/80 px-4 py-3 md:col-span-2" placeholder="¿Qué necesitas? (Landing / Corporativa / Tienda) + rubro" name="need" required />
+                            <textarea className="rounded-2xl border border-slate-300 bg-white/80 px-4 py-3 md:col-span-2 min-h-[120px]" placeholder="Objetivo: vender más, captar leads, mostrar servicios, etc." name="message" required />
+                            <button type="submit" className="btn btn-primary md:col-span-2">Enviar solicitud</button>
 
-                            <button type="submit" className="btn btn-primary shadow-soft md:col-span-2">
-                                Enviar solicitud
-                            </button>
-
-                            <a
-                                className="md:col-span-2 text-center text-sm text-slate-600 hover:text-slate-900"
-                                href={waMain}
-                                target="_blank"
-                                rel="noreferrer"
-                            >
+                            <a className="md:col-span-2 text-center text-sm text-slate-600 hover:text-slate-900" href={waMain} target="_blank" rel="noreferrer">
                                 Prefiero hablar por WhatsApp
                             </a>
                         </form>
