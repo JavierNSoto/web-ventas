@@ -1,50 +1,92 @@
 "use client";
 
-import { useState } from "react";
-import SectionReveal from "@/components/SectionReveal";
+import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useMemo, useState } from "react";
 
-const faqs = [
-    { q: "¿En cuánto tiempo entregan?", a: "Landing: 3–7 días. Corporativa: 7–14 días. E-commerce: 2–4 semanas (según catálogo e integraciones)." },
-    { q: "¿Incluye dominio y correo?", a: "Podemos ayudarte a configurarlo. El dominio y correo se pagan al proveedor (NIC/Workspace, etc.)." },
-    { q: "¿Puedo editar la web después?", a: "Sí. Podemos dejarla administrable o manejar cambios por mantención." },
-    { q: "¿Hacen mantención?", a: "Sí: actualizaciones, backups, monitoreo, mejoras y soporte según el plan." },
-    { q: "¿Trabajan con WordPress o a medida?", a: "Ambas. Recomendamos la mejor opción según tu negocio, presupuesto y velocidad de salida." },
-];
+type QA = { q: string; a: string };
 
 export default function FAQ() {
+    const faqs: QA[] = useMemo(
+        () => [
+            {
+                q: "¿En cuánto tiempo está lista?",
+                a: "Normalmente 7–14 días para una entrega inicial (depende del alcance). Después podemos seguir con mejoras continuas.",
+            },
+            {
+                q: "¿Incluye SEO?",
+                a: "Incluye SEO técnico base (estructura, metadata, performance, accesibilidad). SEO avanzado y estrategia de contenidos se cotiza aparte.",
+            },
+            {
+                q: "¿Puedo pedir cambios después?",
+                a: "Sí. Puedes tomar mantención o mejoras continuas. Si no, también hacemos cambios puntuales por bolsa de horas.",
+            },
+            {
+                q: "¿Se trabaja por WhatsApp?",
+                a: "Sí, es el canal principal para avanzar rápido. Igual dejamos todo ordenado y claro con entregables.",
+            },
+            {
+                q: "¿Qué necesitas para partir?",
+                a: "Tu rubro, objetivo, 1–2 referencias (si tienes) y el CTA principal. Si no tienes textos, los armamos contigo.",
+            },
+        ],
+        []
+    );
+
     const [open, setOpen] = useState<number | null>(0);
 
     return (
-        <section id="faq" className="container-max pb-16">
-            <SectionReveal>
-                <h2 className="text-3xl font-extrabold tracking-tight">Preguntas frecuentes</h2>
-                <p className="mt-3 text-slate-600 max-w-2xl">Cierra objeciones y acelera la compra.</p>
-            </SectionReveal>
+        <section className="section" aria-label="Preguntas frecuentes">
+            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+                <div>
+                    <h2 className="section-title">Preguntas típicas</h2>
+                    <p className="section-subtitle">
+                        Te respondemos claro y al grano. Si falta algo, lo vemos por WhatsApp.
+                    </p>
+                </div>
 
-            <div className="mt-8 grid gap-3">
-                {faqs.map((f, idx) => {
+                <div className="small-muted">Tip: mientras más claro el objetivo, más rápido avanzamos.</div>
+            </div>
+
+            <div className="mt-10 grid gap-3">
+                {faqs.map((item, idx) => {
                     const isOpen = open === idx;
                     return (
-                        <SectionReveal key={f.q}>
+                        <div key={item.q} className="card overflow-hidden">
                             <button
                                 type="button"
                                 onClick={() => setOpen(isOpen ? null : idx)}
-                                className="w-full text-left rounded-2xl border border-slate-200 bg-white/70 shadow-soft px-5 py-4"
+                                className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left"
+                                aria-expanded={isOpen}
                             >
-                                <div className="flex items-center justify-between gap-4">
-                                    <div className="font-semibold">{f.q}</div>
-                                    <ChevronDown className={cn("h-5 w-5 transition", isOpen && "rotate-180")} />
-                                </div>
-                                <div className={cn("mt-2 text-sm text-slate-600 leading-relaxed", !isOpen && "hidden")}>
-                                    {f.a}
-                                </div>
+                                <div className="text-base font-semibold tracking-tight">{item.q}</div>
+                                <motion.span
+                                    animate={{ rotate: isOpen ? 180 : 0 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="grid h-10 w-10 place-items-center rounded-2xl bg-white/6 border border-white/10"
+                                >
+                                    <ChevronDown className="h-5 w-5" />
+                                </motion.span>
                             </button>
-                        </SectionReveal>
+
+                            <AnimatePresence initial={false}>
+                                {isOpen ? (
+                                    <motion.div
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: "auto", opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        transition={{ duration: 0.25, ease: "easeOut" }}
+                                    >
+                                        <div className="px-5 pb-5 text-sm leading-6 text-white/70">{item.a}</div>
+                                    </motion.div>
+                                ) : null}
+                            </AnimatePresence>
+                        </div>
                     );
                 })}
             </div>
+
+            <div className="mt-14 hr-soft" />
         </section>
     );
 }
